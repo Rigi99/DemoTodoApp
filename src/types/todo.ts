@@ -1,12 +1,10 @@
 export interface BaseTodo {
-    text: string;
-    done: boolean;
-    status: 'open' | 'inProgress' | 'closed';
-    createdAt: Date;
-    updatedAt: Date;
+    title: string;
+    description: string;
+    deadline: Date;
+    status: 'open' | 'inProgress' | 'done';
 }
 
 export interface Todo extends BaseTodo {
     _id: string;
-    __v?: number;
 }

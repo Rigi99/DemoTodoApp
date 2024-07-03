@@ -7,16 +7,16 @@ export const fetchTodos = async (): Promise<Todo[]> => {
     return response.data;
 };
 
-export const addTodo = async (newTodo: Omit<BaseTodo, 'createdAt' | 'updatedAt'>): Promise<Todo> => {
+export const addTodo = async (newTodo: BaseTodo): Promise<Todo> => {
     const response = await axios.post<Todo>(`${BACKEND_BASE_API_URL}/todos`, newTodo);
     return response.data;
 };
 
 export const updateTodo = async (updatedTodo: Todo): Promise<Todo> => {
-    const response = await axios.put<Todo>(`${BACKEND_BASE_API_URL}/todos${updatedTodo._id}`, updatedTodo);
+    const response = await axios.put<Todo>(`${BACKEND_BASE_API_URL}/todos/${updatedTodo._id}`, updatedTodo);
     return response.data;
 };
 
 export const deleteTodo = async (id: string): Promise<void> => {
-    await axios.delete(`${BACKEND_BASE_API_URL}/todos${id}`);
+    await axios.delete(`${BACKEND_BASE_API_URL}/todos/${id}`);
 };

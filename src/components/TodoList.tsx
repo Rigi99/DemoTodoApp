@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Todo } from '../types/todo';
-import { fetchTodos, addTodo, updateTodo, deleteTodo } from '../services/todo.service';
+import { fetchTodos, addTodo, deleteTodo, updateTodo } from '../services/todo.service';
 import { Container, Column, List, Separator, NewTodoInput, AddTodoButton } from './TodoList.style';
 import TodoCard from './TodoCard';
 
@@ -9,31 +9,42 @@ const TodoList: React.FC = () => {
     const [newTodo, setNewTodo] = useState<string>('');
 
     useEffect(() => {
-        const fetchData = async () => {
-            const todosData = await fetchTodos();
-            setTodos(todosData);
-        };
-        fetchData().then(() => null);
+        fetchData().then(()=>null);
     }, []);
+
+    const fetchData = async () => {
+        const todosData = await fetchTodos();
+        setTodos(todosData);
+    };
 
     const handleAddTodo = async () => {
         if (newTodo.trim() === '') return;
 
         const addedTodo = await addTodo({
-            text: newTodo,
-            done: false,
+            title: newTodo,
+            description: "smth",
             status: 'open',
+            deadline: new Date(),
         });
 
         setTodos([...todos, addedTodo]);
         setNewTodo('');
     };
 
-    const handleUpdateTodo = async (updatedTodo: Todo) => {
-        const updated = await updateTodo(updatedTodo);
-        const updatedTodos = todos.map(todo => (todo._id === updated._id ? updated : todo));
-        setTodos(updatedTodos);
+    const handleUpdateTodo = async (id: string, updatedTodo: Todo) => {
+        try {
+            const responseTodo = await updateTodo({
+                ...updatedTodo,
+                _id: id,
+            });
+
+            const updatedTodos = todos.map(todo => (todo._id === id ? responseTodo : todo));
+            setTodos(updatedTodos);
+        } catch (error) {
+            console.error("Error updating todo status:", error);
+        }
     };
+
 
     const handleDeleteTodo = async (id: string) => {
         await deleteTodo(id);
@@ -55,8 +66,9 @@ const TodoList: React.FC = () => {
                             <TodoCard
                                 key={todo._id}
                                 todo={todo}
-                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
-                                onDelete={() => handleDeleteTodo(todo._id)}
+                                onUpdateStatus={handleUpdateTodo}
+                                onDelete={handleDeleteTodo}
+                                onEdit={handleUpdateTodo}
                             />
                         ))}
                     </List>
@@ -69,22 +81,24 @@ const TodoList: React.FC = () => {
                             <TodoCard
                                 key={todo._id}
                                 todo={todo}
-                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
-                                onDelete={() => handleDeleteTodo(todo._id)}
+                                onUpdateStatus={handleUpdateTodo}
+                                onDelete={handleDeleteTodo}
+                                onEdit={handleUpdateTodo}
                             />
                         ))}
                     </List>
                 </Column>
                 <Separator />
                 <Column>
-                    <h2>Closed</h2>
+                    <h2>Done</h2>
                     <List>
                         {filterTodosByStatus('done').map(todo => (
                             <TodoCard
                                 key={todo._id}
                                 todo={todo}
-                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
-                                onDelete={() => handleDeleteTodo(todo._id)}
+                                onUpdateStatus={handleUpdateTodo}
+                                onDelete={handleDeleteTodo}
+                                onEdit={handleUpdateTodo}
                             />
                         ))}
                     </List>
