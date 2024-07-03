@@ -1,20 +1,14 @@
-import {createSlice, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, createAsyncThunk, PayloadAction, SerializedError} from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
+import {ApiResponse, User} from "../types/user.ts";
 
-type User = {
+type UserType = {
     email: string;
     password: string;
 };
 
-type NewUser = User & {
+type NewUser = UserType & {
     username: string;
-};
-
-type UserBasicInfo = {
-    user: any;
-    id: string;
-    name: string;
-    email: string;
 };
 
 type UserProfileData = {
@@ -23,7 +17,7 @@ type UserProfileData = {
 };
 
 type AuthApiState = {
-    basicUserInfo?: UserBasicInfo | null;
+    basicUserInfo?: User | null;
     userProfileData?: UserProfileData | null;
     status: "idle" | "loading" | "failed";
     error: string | null;
@@ -31,47 +25,43 @@ type AuthApiState = {
 
 const initialState: AuthApiState = {
     basicUserInfo: localStorage.getItem("userInfo")
-        ? JSON.parse(localStorage.getItem("userInfo") as string)
+        ? JSON.parse(localStorage.getItem("userInfo") as string).user
         : null,
     userProfileData: undefined,
     status: "idle",
     error: null,
 };
 
-export const login = createAsyncThunk("login", async (data: User) => {
+type LoginThunk = ReturnType<typeof createAsyncThunk<ApiResponse, UserType>>;
+type RegisterThunk = ReturnType<typeof createAsyncThunk<ApiResponse, NewUser>>;
+type LogoutThunk = ReturnType<typeof createAsyncThunk<ApiResponse, string>>;
+type GetUserThunk = ReturnType<typeof createAsyncThunk<ApiResponse, string>>;
+
+export const login: LoginThunk = createAsyncThunk("login", async (data: UserType) => {
     const response = await axiosInstance.post("/auth/login", data);
     const resData = response.data;
     localStorage.setItem("userInfo", JSON.stringify(resData));
-
     return resData;
 });
 
-export const register = createAsyncThunk("register", async (data: NewUser) => {
+export const register: RegisterThunk = createAsyncThunk("register", async (data: NewUser) => {
     const response = await axiosInstance.post("/auth/register", data);
     const resData = response.data;
     localStorage.setItem("userInfo", JSON.stringify(resData));
-
     return resData;
 });
 
-export const logout = createAsyncThunk("logout", async (id: string) => {
+export const logout: LogoutThunk = createAsyncThunk("logout", async (id: string) => {
     const response = await axiosInstance.post(`/auth/logout/${id}`, {});
     const resData = response.data;
-
     localStorage.removeItem("userInfo");
-
     return resData;
 });
 
-export const getUser = createAsyncThunk(
-    "users/profile",
-    async (userId: string) => {
-        const response = await axiosInstance.get(
-            `/users/${userId}`
-        );
-        return response.data;
-    }
-);
+export const getUser: GetUserThunk = createAsyncThunk("users/profile", async (userId: string) => {
+    const response = await axiosInstance.get(`/users/${userId}`);
+    return response.data;
+});
 
 const authSlice = createSlice({
     name: "auth",
@@ -83,34 +73,26 @@ const authSlice = createSlice({
                 state.status = "loading";
                 state.error = null;
             })
-            .addCase(
-                login.fulfilled,
-                (state, action: PayloadAction<UserBasicInfo>) => {
-                    state.status = "idle";
-                    state.basicUserInfo = action.payload;
-                }
-            )
+            .addCase(login.fulfilled, (state, action: PayloadAction<ApiResponse>) => {
+                state.status = "idle";
+                state.basicUserInfo = action.payload.user;
+            })
             .addCase(login.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message || "Login failed";
+                state.error = (action.error as SerializedError).message || "Login failed";
             })
-
             .addCase(register.pending, (state) => {
                 state.status = "loading";
                 state.error = null;
             })
-            .addCase(
-                register.fulfilled,
-                (state, action: PayloadAction<UserBasicInfo>) => {
-                    state.status = "idle";
-                    state.basicUserInfo = action.payload;
-                }
-            )
+            .addCase(register.fulfilled, (state, action: PayloadAction<ApiResponse>) => {
+                state.status = "idle";
+                state.basicUserInfo = action.payload.user;
+            })
             .addCase(register.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message || "Registration failed";
+                state.error = (action.error as SerializedError).message || "Register failed";
             })
-
             .addCase(logout.pending, (state) => {
                 state.status = "loading";
                 state.error = null;
@@ -121,20 +103,19 @@ const authSlice = createSlice({
             })
             .addCase(logout.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message || "Logout failed";
+                state.error = (action.error as SerializedError).message || "Logout failed";
             })
-
             .addCase(getUser.pending, (state) => {
                 state.status = "loading";
                 state.error = null;
             })
-            .addCase(getUser.fulfilled, (state, action) => {
+            .addCase(getUser.fulfilled, (state, action: PayloadAction<ApiResponse>) => {
                 state.status = "idle";
-                state.userProfileData = action.payload;
+                state.userProfileData = action.payload.user;
             })
             .addCase(getUser.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.error.message || "Get user profile data failed";
+                state.error = (action.error as SerializedError).message || "Get user failed";
             });
     },
 });

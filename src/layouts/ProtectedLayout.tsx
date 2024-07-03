@@ -9,11 +9,7 @@ const ProtectedLayout = () => {
         return <Navigate replace to={"/login"}/>;
     }
 
-    return (
-        <>
-            <Outlet/>
-        </>
-    );
+    return <Outlet/>;
 };
 
 export default ProtectedLayout;

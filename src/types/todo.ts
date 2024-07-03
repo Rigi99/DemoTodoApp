@@ -1,5 +1,3 @@
-// src/types/todo.ts
-
 export interface BaseTodo {
     text: string;
     done: boolean;

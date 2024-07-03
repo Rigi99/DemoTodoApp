@@ -8,12 +8,7 @@ const DefaultLayout = () => {
     if (basicUserInfo) {
         return <Navigate replace to={"/"}/>;
     }
-
-    return (
-        <>
-            <Outlet/>
-        </>
-    );
+    return <Outlet/>;
 };
 
 export default DefaultLayout;

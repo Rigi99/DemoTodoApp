@@ -1,6 +1,8 @@
-import React, {useState, useEffect} from 'react';
-import {Todo} from '../types/todo';
-import {fetchTodos, addTodo, updateTodo, deleteTodo} from '../services/todo.service';
+import React, { useState, useEffect } from 'react';
+import { Todo } from '../types/todo';
+import { fetchTodos, addTodo, updateTodo, deleteTodo } from '../services/todo.service';
+import { Container, Column, List, Separator, NewTodoInput, AddTodoButton } from './TodoList.style';
+import TodoCard from './TodoCard';
 
 const TodoList: React.FC = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
@@ -39,34 +41,64 @@ const TodoList: React.FC = () => {
         setTodos(updatedTodos);
     };
 
+    const filterTodosByStatus = (status: string) => {
+        return todos.filter(todo => todo.status === status);
+    };
+
     return (
-        <div>
-            <h2>Todo List</h2>
-            <ul>
-                {todos.map(todo => (
-                    <li key={todo._id} className="card">
-                        <input
-                            type="checkbox"
-                            checked={todo.done}
-                            onChange={() => handleUpdateTodo({ ...todo, done: !todo.done })}
-                        />
-                        <span style={{ textDecoration: todo.done ? 'line-through' : 'none' }}>
-                            {todo.text}
-                        </span>
-                        <button onClick={() => handleDeleteTodo(todo._id)}>Delete</button>
-                    </li>
-                ))}
-            </ul>
-            <div>
-                <input
-                    type="text"
+        <>
+            <Container>
+                <Column>
+                    <h2>Open</h2>
+                    <List>
+                        {filterTodosByStatus('open').map(todo => (
+                            <TodoCard
+                                key={todo._id}
+                                todo={todo}
+                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
+                                onDelete={() => handleDeleteTodo(todo._id)}
+                            />
+                        ))}
+                    </List>
+                </Column>
+                <Separator />
+                <Column>
+                    <h2>In Progress</h2>
+                    <List>
+                        {filterTodosByStatus('inProgress').map(todo => (
+                            <TodoCard
+                                key={todo._id}
+                                todo={todo}
+                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
+                                onDelete={() => handleDeleteTodo(todo._id)}
+                            />
+                        ))}
+                    </List>
+                </Column>
+                <Separator />
+                <Column>
+                    <h2>Closed</h2>
+                    <List>
+                        {filterTodosByStatus('done').map(todo => (
+                            <TodoCard
+                                key={todo._id}
+                                todo={todo}
+                                onMarkAsDone={() => handleUpdateTodo({ ...todo, done: !todo.done })}
+                                onDelete={() => handleDeleteTodo(todo._id)}
+                            />
+                        ))}
+                    </List>
+                </Column>
+            </Container>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                <NewTodoInput
                     value={newTodo}
                     onChange={(e) => setNewTodo(e.target.value)}
                     placeholder="New Todo"
                 />
-                <button onClick={handleAddTodo}>Add Todo</button>
+                <AddTodoButton onClick={handleAddTodo}>Add</AddTodoButton>
             </div>
-        </div>
+        </>
     );
 };
 
