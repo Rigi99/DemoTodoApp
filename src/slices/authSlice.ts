@@ -1,6 +1,7 @@
 import {createSlice, createAsyncThunk, PayloadAction, SerializedError} from "@reduxjs/toolkit";
 import axiosInstance from "../api/axiosInstance";
 import {ApiResponse, User} from "../types/user.ts";
+import axios from "axios";
 
 type UserType = {
     email: string;
@@ -58,9 +59,25 @@ export const logout: LogoutThunk = createAsyncThunk("logout", async (id: string)
     return resData;
 });
 
-export const getUser: GetUserThunk = createAsyncThunk("users/profile", async (userId: string) => {
-    const response = await axiosInstance.get(`/users/${userId}`);
-    return response.data;
+export const getUser: GetUserThunk = createAsyncThunk("users/profile", async (userId: string, {dispatch}) => {
+    try{
+        const response = await axiosInstance.get(`/users/${userId}`);
+        console.log("authSlice",response);
+        return response.data;
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            if (error.response && error.response.status === 401) {
+                dispatch(logout(userId));
+            } else {
+                console.error(error);
+                throw error;
+            }
+        } else {
+            console.error('Unexpected error', error);
+            throw error;
+        }
+    }
 });
 
 const authSlice = createSlice({
