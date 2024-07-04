@@ -62,7 +62,6 @@ export const logout: LogoutThunk = createAsyncThunk("logout", async (id: string)
 export const getUser: GetUserThunk = createAsyncThunk("users/profile", async (userId: string, {dispatch}) => {
     try{
         const response = await axiosInstance.get(`/users/${userId}`);
-        console.log("authSlice",response);
         return response.data;
     }
     catch (error) {

@@ -28,7 +28,6 @@ const TodoList: React.FC = () => {
             deadline: '',
         });
 
-        setTodos([...todos, addedTodo]);
         setNewTodo(addedTodo);
         setAddingTodo(true);
         setNewTodoIsEditing(true);
@@ -36,13 +35,15 @@ const TodoList: React.FC = () => {
 
     const handleUpdateTodo = async (id: string, updatedTodo: Todo) => {
         try {
-            const responseTodo = await updateTodo({
+            await updateTodo({
                 ...updatedTodo,
                 _id: id,
             });
 
-            const updatedTodos = todos.map(todo => (todo._id === id ? responseTodo : todo));
-            setTodos(updatedTodos);
+            const todosData = await fetchTodos();
+            setTodos(todosData);
+            setNewTodoIsEditing(false);
+            setAddingTodo(false);
         } catch (error) {
             console.error("Error updating todo status:", error);
         }
