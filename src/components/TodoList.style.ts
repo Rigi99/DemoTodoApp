@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {Colors} from "../utils/colors.ts";
 
 export const Container = styled.div`
     display: flex;
@@ -23,14 +24,33 @@ export const List = styled.ul`
     padding: 0;
 `;
 
-export const NewTodoInput = styled.input.attrs({ type: 'text' })`
-    margin-right: 10px;
-`;
-
-export const AddTodoButton = styled.button``;
-
 export const Separator = styled.div`
     width: 1px;
     background-color: #ccc;
     margin: 0 10px;
+`;
+
+const baseButtonStyles = `
+    color: ${Colors.WHITE};
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+`;
+
+export const AddButton = styled.button`
+    ${baseButtonStyles};
+    background-color: ${Colors.CYAN};
+    margin-left: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    &:hover {
+        background-color: ${Colors.DARK_CYAN};
+    }
 `;

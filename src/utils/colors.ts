@@ -9,7 +9,7 @@ export const Colors = {
     YELLOW: '#FFFF00',
     ORANGE: '#FFA500',
     PURPLE: '#800080',
-    CYAN: '#00FFFF',
+    CYAN: '#00b2b2',
     MAGENTA: '#FF00FF',
     DARK_GREEN: '#006400',
     DARK_RED: '#8B0000',

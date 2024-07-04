@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Todo } from '../types/todo';
+import {Todo} from '../types/todo';
 import { fetchTodos, addTodo, deleteTodo, updateTodo } from '../services/todo.service';
-import { Container, Column, List, Separator, NewTodoInput, AddTodoButton } from './TodoList.style';
+import { Container, Column, List, Separator, AddButton } from './TodoList.style';
 import TodoCard from './TodoCard';
+import AddIcon from '@mui/icons-material/Add';
 
 const TodoList: React.FC = () => {
     const [todos, setTodos] = useState<Todo[]>([]);
-    const [newTodo, setNewTodo] = useState<string>('');
+    const [newTodo, setNewTodo] = useState<Todo | undefined>();
+    const [addingTodo, setAddingTodo] = useState(false);
+    const [newTodoIsEditing, setNewTodoIsEditing] = useState(false);
 
     useEffect(() => {
-        fetchData().then(()=>null);
+        fetchData().then(() => null);
     }, []);
 
     const fetchData = async () => {
@@ -18,17 +21,17 @@ const TodoList: React.FC = () => {
     };
 
     const handleAddTodo = async () => {
-        if (newTodo.trim() === '') return;
-
         const addedTodo = await addTodo({
-            title: newTodo,
-            description: "smth",
+            title: '',
+            description: '',
             status: 'open',
-            deadline: "",
+            deadline: '',
         });
 
         setTodos([...todos, addedTodo]);
-        setNewTodo('');
+        setNewTodo(addedTodo);
+        setAddingTodo(true);
+        setNewTodoIsEditing(true);
     };
 
     const handleUpdateTodo = async (id: string, updatedTodo: Todo) => {
@@ -45,7 +48,6 @@ const TodoList: React.FC = () => {
         }
     };
 
-
     const handleDeleteTodo = async (id: string) => {
         await deleteTodo(id);
         const updatedTodos = todos.filter(todo => todo._id !== id);
@@ -60,8 +62,23 @@ const TodoList: React.FC = () => {
         <>
             <Container>
                 <Column>
-                    <h2>Open</h2>
+                    <h2 style={{ display: 'flex', alignItems: 'center' }}>
+                        Open
+                        <AddButton onClick={handleAddTodo}>
+                            <AddIcon />
+                        </AddButton>
+                    </h2>
                     <List>
+                        {addingTodo && newTodoIsEditing && (
+                            <TodoCard
+                                key="new"
+                                todo={newTodo}
+                                onUpdateStatus={() => {}}
+                                onDelete={() => {}}
+                                onEdit={handleUpdateTodo}
+                                initialEditing={true}
+                            />
+                        )}
                         {filterTodosByStatus('open').map(todo => (
                             <TodoCard
                                 key={todo._id}
@@ -104,14 +121,6 @@ const TodoList: React.FC = () => {
                     </List>
                 </Column>
             </Container>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                <NewTodoInput
-                    value={newTodo}
-                    onChange={(e) => setNewTodo(e.target.value)}
-                    placeholder="New Todo"
-                />
-                <AddTodoButton onClick={handleAddTodo}>Add</AddTodoButton>
-            </div>
         </>
     );
 };
