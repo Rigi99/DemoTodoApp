@@ -3,6 +3,7 @@ export interface BaseTodo {
     description: string;
     deadline: string;
     status: 'open' | 'inProgress' | 'done';
+    assignedTo: string;
 }
 
 export interface Todo extends BaseTodo {

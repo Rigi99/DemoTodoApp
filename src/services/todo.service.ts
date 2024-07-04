@@ -2,8 +2,8 @@ import axios from 'axios';
 import { Todo, BaseTodo } from '../types/todo';
 import {BACKEND_BASE_API_URL} from "../constants.ts";
 
-export const fetchTodos = async (): Promise<Todo[]> => {
-    const response = await axios.get<Todo[]>(`${BACKEND_BASE_API_URL}/todos`);
+export const fetchTodos = async (assignedTo: string): Promise<Todo[]> => {
+    const response = await axios.get<Todo[]>(`${BACKEND_BASE_API_URL}/todos/${assignedTo}`);
     return response.data;
 };
 

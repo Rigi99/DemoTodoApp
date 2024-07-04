@@ -5,7 +5,11 @@ import { Container, Column, List, Separator, AddButton } from './TodoList.style'
 import TodoCard from './TodoCard';
 import AddIcon from '@mui/icons-material/Add';
 
-const TodoList: React.FC = () => {
+interface TodoListProps {
+    userId: string;
+}
+
+const TodoList: React.FC<TodoListProps> = ({ userId }) => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodo, setNewTodo] = useState<Todo | undefined>();
     const [addingTodo, setAddingTodo] = useState(false);
@@ -13,10 +17,11 @@ const TodoList: React.FC = () => {
 
     useEffect(() => {
         fetchData().then(() => null);
-    }, []);
+    });
 
     const fetchData = async () => {
-        const todosData = await fetchTodos();
+        const todosData = await fetchTodos(userId);
+        console.log(todosData);
         setTodos(todosData);
     };
 
@@ -26,6 +31,7 @@ const TodoList: React.FC = () => {
             description: '',
             status: 'open',
             deadline: '',
+            assignedTo: ''
         });
 
         setNewTodo(addedTodo);
@@ -40,7 +46,7 @@ const TodoList: React.FC = () => {
                 _id: id,
             });
 
-            const todosData = await fetchTodos();
+            const todosData = await fetchTodos(userId);
             setTodos(todosData);
             setNewTodoIsEditing(false);
             setAddingTodo(false);

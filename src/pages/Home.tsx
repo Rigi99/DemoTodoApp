@@ -38,7 +38,7 @@ const Home: React.FC = () => {
                 </Button>
             </Box>
             <Typography variant="h2">Your TODOs</Typography>
-            <TodoList />
+            <TodoList userId={basicUserInfo ? basicUserInfo._id : ""} />
         </Box>
     );
 };
