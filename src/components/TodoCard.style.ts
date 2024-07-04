@@ -10,7 +10,7 @@ const getBackgroundColor = (status: 'open' | 'inProgress' | 'done'): string => {
         case 'open':
             return Colors.LIGHT_GREY;
         case 'inProgress':
-            return Colors.LIGHT_BLUE;
+            return Colors.BLUE;
         case 'done':
             return Colors.GREEN;
         default:
@@ -21,9 +21,12 @@ const getBackgroundColor = (status: 'open' | 'inProgress' | 'done'): string => {
 export const CardContainer = styled.div<CardContainerProps>`
     background-color: ${props => getBackgroundColor(props.status)};
     border-radius: 8px;
-    padding: 16px;
+    padding: 10px;
     margin: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 8px 8px 4px rgba(0, 0, 0, 0.4);
+    min-width: 300px;
+    align-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.25);
 `;
 
 export const CardTitle = styled.span`
@@ -45,14 +48,15 @@ export const ButtonContainer = styled.div`
 const baseButtonStyles = `
     color: ${Colors.WHITE};
     border: none;
-    padding: 8px;
     cursor: pointer;
     border-radius: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
+    box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.25);
 `;
 
 export const DoneButton = styled.button`
@@ -67,7 +71,7 @@ export const DoneButton = styled.button`
 
 export const InProgressButton = styled.button`
     ${baseButtonStyles};
-    background-color: ${Colors.LIGHT_BLUE};
+    background-color: ${Colors.BLUE};
     margin: 2px;
 
     &:hover {
@@ -87,11 +91,18 @@ export const DeleteButton = styled.button`
 
 export const EditButton = styled.button`
     ${baseButtonStyles};
+    width: 30px;
+    height: 30px;
     background-color: ${Colors.ORANGE};
     margin: 2px;
+    padding: 1px;
 
     &:hover {
         background-color: ${Colors.DARK_ORANGE};
+    }
+    
+    svg{
+        font-size: 18px;
     }
 `;
 
@@ -102,6 +113,7 @@ export const TitleContainer = styled.div`
 `;
 
 export const Input = styled.input`
+    display: flex;
     padding: 8px;
     margin: 8px;
     border: 1px solid ${Colors.GREY};
@@ -109,6 +121,7 @@ export const Input = styled.input`
 `;
 
 export const TextArea = styled.textarea`
+    display: flex;
     padding: 8px;
     margin: 8px;
     border: 1px solid ${Colors.GREY};
@@ -116,6 +129,7 @@ export const TextArea = styled.textarea`
 `;
 
 export const Select = styled.select`
+    display: flex;
     padding: 8px;
     margin: 8px;
     border: 1px solid ${Colors.GREY};

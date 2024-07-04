@@ -1,9 +1,25 @@
-import React, { useEffect } from "react";
-import { Button, Box, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { getUser, logout } from "../slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from "react";
+import {Button, Box} from "@mui/material";
+import {useAppDispatch, useAppSelector} from "../hooks/redux-hooks";
+import {getUser, logout} from "../slices/authSlice";
+import {useNavigate} from "react-router-dom";
 import TodoList from "../components/TodoList.tsx";
+import styled from "styled-components";
+
+const StyledButton = styled(Button)`
+    && {
+        background-color: #f50057;
+        color: white;
+        border-radius: 4px;
+        box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+        transition: background-color 0.3s ease;
+        font-size: 15px;
+
+        &:hover {
+            background-color: #c51162;
+        }
+    }
+`;
 
 const Home: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -30,15 +46,15 @@ const Home: React.FC = () => {
     };
 
     return (
-        <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" p={3}>
-            <Box display="flex" justifyContent="space-between" width="100%" mb={3}>
-                <Typography variant="h4">Hello, {userProfileInfo?.username}!</Typography>
-                <Button variant="contained" onClick={handleLogout}>
+        <Box display="flex" flexDirection="column" alignItems="center" minHeight="100vh" m={3}>
+            <Box display="flex" justifyContent="space-between" width="100%" margin={2}>
+                <h1 style={{margin: 0}}>Hello, {userProfileInfo?.username}!</h1>
+                <StyledButton onClick={handleLogout}>
                     Logout
-                </Button>
+                </StyledButton>
             </Box>
-            <Typography variant="h2">Your TODOs</Typography>
-            <TodoList userId={basicUserInfo ? basicUserInfo._id : ""} />
+            <h1 style={{fontSize: 70, margin: 10}}>Your TODOs</h1>
+            <TodoList userId={basicUserInfo ? basicUserInfo._id : ""}/>
         </Box>
     );
 };

@@ -5,7 +5,7 @@ export const Container = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 0 10px;
+    margin: 10px;
 `;
 
 export const Column = styled.div`
@@ -25,9 +25,10 @@ export const List = styled.ul`
 `;
 
 export const Separator = styled.div`
-    width: 1px;
-    background-color: #ccc;
+    width: 5px;
+    background-color: ${Colors.GREY};
     margin: 0 10px;
+    border-radius: 10px;
 `;
 
 const baseButtonStyles = `
@@ -41,6 +42,8 @@ const baseButtonStyles = `
     justify-content: center;
     width: 40px;
     height: 40px;
+    box-shadow: 3px 3px 4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.25);
 `;
 
 export const AddButton = styled.button`

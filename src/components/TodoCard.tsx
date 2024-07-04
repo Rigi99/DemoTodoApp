@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     CardContainer,
     CardTitle,
@@ -13,7 +13,7 @@ import {
     TextArea,
     Select
 } from './TodoCard.style';
-import { Todo } from '../types/todo';
+import {Todo} from '../types/todo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DoneIcon from '@mui/icons-material/Done';
@@ -28,7 +28,7 @@ interface TodoCardProps {
     initialEditing?: boolean;
 }
 
-const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onEdit, initialEditing = false }) => {
+const TodoCard: React.FC<TodoCardProps> = ({todo, onUpdateStatus, onDelete, onEdit, initialEditing = false}) => {
     const [showDetails, setShowDetails] = useState(false);
     const [isEditing, setIsEditing] = useState(initialEditing);
     const [editedTitle, setEditedTitle] = useState(todo?.title || '');
@@ -41,11 +41,11 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
     };
 
     const handleInProgress = () => {
-        onUpdateStatus(todo?._id || '', { ...todo!, status: 'inProgress' });
+        onUpdateStatus(todo?._id || '', {...todo!, status: 'inProgress'});
     };
 
     const handleDone = () => {
-        onUpdateStatus(todo?._id || '', { ...todo!, status: 'done' });
+        onUpdateStatus(todo?._id || '', {...todo!, status: 'done'});
     };
 
     const handleEdit = () => {
@@ -66,20 +66,23 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
 
     return (
         <CardContainer status={editedStatus}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ marginBottom: '10px', textAlign: 'center' }}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <div style={{textAlign: 'center'}}>
                     <TitleContainer>
                         {isEditing ? (
-                            <Input
-                                type="text"
-                                value={editedTitle}
-                                onChange={(e) => setEditedTitle(e.target.value)}
-                            />
+                            <>
+                                <span style={{fontWeight: 'bold', color: 'black'}}>Title: </span>
+                                <Input
+                                    type="text"
+                                    value={editedTitle}
+                                    onChange={(e) => setEditedTitle(e.target.value)}
+                                />
+                            </>
                         ) : (
                             <CardTitle>{todo?.title}</CardTitle>
                         )}
                         <EditButton onClick={isEditing ? handleSave : handleEdit}>
-                            {isEditing ? <SaveIcon /> : <EditIcon />}
+                            {isEditing ? <SaveIcon/> : <EditIcon/>}
                         </EditButton>
                     </TitleContainer>
                 </div>
@@ -91,32 +94,40 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
                         marginBottom: '10px',
                     }}
                 >
-                    <div style={{ color: "black" }}>
-                        <span style={{ fontWeight: 'bold' }}>Deadline: </span>
+                    <div style={{color: "black"}}>
                         {isEditing ? (
-                            <Input
-                                type="datetime-local"
-                                value={editedDeadline}
-                                onChange={(e) => setEditedDeadline(e.target.value)}
-                            />
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <span style={{fontWeight: 'bold'}}>Deadline: </span>
+                                <Input
+                                    type="datetime-local"
+                                    value={editedDeadline}
+                                    onChange={(e) => setEditedDeadline(e.target.value)}
+                                />
+                            </div>
                         ) : (
                             `${todo?.deadline}`
                         )}
                         {isEditing ? (
-                            <>
-                                <Select
-                                    value={editedStatus}
-                                    onChange={(e) => setEditedStatus(e.target.value as 'open' | 'inProgress' | 'done')}
-                                >
-                                    <option value="open">Open</option>
-                                    <option value="inProgress">In Progress</option>
-                                    <option value="done">Done</option>
-                                </Select>
-                                <TextArea
-                                    value={editedDescription}
-                                    onChange={(e) => setEditedDescription(e.target.value)}
-                                />
-                            </>
+                            <div>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <span style={{fontWeight: 'bold'}}>Status: </span>
+                                    <Select
+                                        value={editedStatus}
+                                        onChange={(e) => setEditedStatus(e.target.value as 'open' | 'inProgress' | 'done')}
+                                    >
+                                        <option value="open">Open</option>
+                                        <option value="inProgress">In Progress</option>
+                                        <option value="done">Done</option>
+                                    </Select>
+                                </div>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <span style={{fontWeight: 'bold'}}>Description: </span>
+                                    <TextArea
+                                        value={editedDescription}
+                                        onChange={(e) => setEditedDescription(e.target.value)}
+                                    />
+                                </div>
+                            </div>
                         ) : (
                             showDetails && todo?.description && (
                                 <CardDescription>{todo?.description}</CardDescription>
@@ -142,16 +153,16 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
                     <ButtonContainer>
                         {todo?.status === 'open' && (
                             <InProgressButton onClick={handleInProgress}>
-                                <PlayArrowIcon />
+                                <PlayArrowIcon/>
                             </InProgressButton>
                         )}
                         {todo?.status === 'inProgress' && (
                             <DoneButton onClick={handleDone}>
-                                <DoneIcon />
+                                <DoneIcon/>
                             </DoneButton>
                         )}
                         <DeleteButton onClick={() => onDelete(todo?._id || '')}>
-                            <DeleteIcon />
+                            <DeleteIcon/>
                         </DeleteButton>
                     </ButtonContainer>
                 )}

@@ -68,7 +68,7 @@ const TodoList: React.FC<TodoListProps> = ({userId}) => {
         <>
             <Container>
                 <Column>
-                    <h2 style={{display: 'flex', alignItems: 'center'}}>
+                    <h2 style={{display: 'flex', alignItems: 'center', margin: '5px'}}>
                         Open
                         <AddButton onClick={handleAddTodo}>
                             <AddIcon/>
@@ -100,7 +100,7 @@ const TodoList: React.FC<TodoListProps> = ({userId}) => {
                 </Column>
                 <Separator/>
                 <Column>
-                    <h2>In Progress</h2>
+                    <h2 style={{display: 'flex', alignItems: 'center', margin: '5px'}}>In Progress</h2>
                     <List>
                         {filterTodosByStatus('inProgress').map(todo => (
                             <TodoCard
@@ -115,7 +115,7 @@ const TodoList: React.FC<TodoListProps> = ({userId}) => {
                 </Column>
                 <Separator/>
                 <Column>
-                    <h2>Done</h2>
+                    <h2 style={{display: 'flex', alignItems: 'center', margin: '5px'}}>Done</h2>
                     <List>
                         {filterTodosByStatus('done').map(todo => (
                             <TodoCard
