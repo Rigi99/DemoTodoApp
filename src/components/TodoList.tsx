@@ -31,7 +31,7 @@ const TodoList: React.FC<TodoListProps> = ({ userId }) => {
             description: '',
             status: 'open',
             deadline: '',
-            assignedTo: ''
+            assignedTo: userId
         });
 
         setNewTodo(addedTodo);
