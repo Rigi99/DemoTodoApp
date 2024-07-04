@@ -24,7 +24,7 @@ const TodoList: React.FC = () => {
             title: newTodo,
             description: "smth",
             status: 'open',
-            deadline: new Date(),
+            deadline: "",
         });
 
         setTodos([...todos, addedTodo]);

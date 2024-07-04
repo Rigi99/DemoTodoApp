@@ -37,7 +37,7 @@ const Home: React.FC = () => {
                     Logout
                 </Button>
             </Box>
-            <Typography variant="h1">Your TODOs</Typography>
+            <Typography variant="h2">Your TODOs</Typography>
             <TodoList />
         </Box>
     );

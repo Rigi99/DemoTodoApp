@@ -1,7 +1,7 @@
 export interface BaseTodo {
     title: string;
     description: string;
-    deadline: Date;
+    deadline: string;
     status: 'open' | 'inProgress' | 'done';
 }
 

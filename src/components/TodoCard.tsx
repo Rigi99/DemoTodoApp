@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
     CardContainer,
     CardTitle,
@@ -13,7 +13,7 @@ import {
     TextArea,
     Select
 } from './TodoCard.style';
-import { Todo } from '../types/todo';
+import {Todo} from '../types/todo';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import DoneIcon from '@mui/icons-material/Done';
@@ -27,24 +27,24 @@ interface TodoCardProps {
     onEdit: (id: string, updatedTodo: Todo) => void;
 }
 
-const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onEdit }) => {
+const TodoCard: React.FC<TodoCardProps> = ({todo, onUpdateStatus, onDelete, onEdit}) => {
     const [showDetails, setShowDetails] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(todo.title);
     const [editedDescription, setEditedDescription] = useState(todo.description);
     const [editedStatus, setEditedStatus] = useState<'open' | 'inProgress' | 'done'>(todo.status);
-    const [editedDeadline, setEditedDeadline] = useState(new Date(todo.deadline).toISOString().slice(0, 16));
+    const [editedDeadline, setEditedDeadline] = useState(todo.deadline);
 
     const toggleDetails = () => {
         setShowDetails(!showDetails);
     };
 
     const handleInProgress = () => {
-        onUpdateStatus(todo._id, { ...todo, status: 'inProgress' });
+        onUpdateStatus(todo._id, {...todo, status: 'inProgress'});
     };
 
     const handleDone = () => {
-        onUpdateStatus(todo._id, { ...todo, status: 'done' });
+        onUpdateStatus(todo._id, {...todo, status: 'done'});
     };
 
     const handleEdit = () => {
@@ -57,15 +57,15 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
             title: editedTitle,
             description: editedDescription,
             status: editedStatus,
-            deadline: new Date(editedDeadline),
+            deadline: editedDeadline.replace('T', ' '),
         });
         setIsEditing(false);
     };
 
     return (
         <CardContainer status={todo.status}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ marginBottom: '10px', textAlign: 'center' }}>
+            <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                <div style={{marginBottom: '10px', textAlign: 'center'}}>
                     <TitleContainer>
                         {isEditing ? (
                             <Input
@@ -77,7 +77,7 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
                             <CardTitle>{todo.title}</CardTitle>
                         )}
                         <EditButton onClick={isEditing ? handleSave : handleEdit}>
-                            {isEditing ? <SaveIcon /> : <EditIcon />}
+                            {isEditing ? <SaveIcon/> : <EditIcon/>}
                         </EditButton>
                     </TitleContainer>
                 </div>
@@ -89,17 +89,17 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
                         marginBottom: '10px',
                     }}
                 >
-                    <div style={{ color: "black" }}>
-                        <span style={{ fontWeight: 'bold' }}>Deadline: </span>
+                    <div style={{color: "black"}}>
+                        <span style={{fontWeight: 'bold'}}>Deadline: </span>
                         {isEditing ? (
                             <Input
                                 type="datetime-local"
                                 value={editedDeadline}
                                 onChange={(e) => setEditedDeadline(e.target.value)}
                             />
-                        ) : (
-                            `${new Date(todo.deadline).toISOString().slice(0, 10)} ${new Date(todo.deadline).toISOString().slice(11, 16)}`
-                        )}
+                            ) : (
+                            `${todo.deadline}`
+                            )}
                         {isEditing ? (
                             <>
                                 <Select
@@ -140,16 +140,16 @@ const TodoCard: React.FC<TodoCardProps> = ({ todo, onUpdateStatus, onDelete, onE
                     <ButtonContainer>
                         {todo.status === 'open' && (
                             <InProgressButton onClick={handleInProgress}>
-                                <PlayArrowIcon />
+                                <PlayArrowIcon/>
                             </InProgressButton>
                         )}
                         {todo.status === 'inProgress' && (
                             <DoneButton onClick={handleDone}>
-                                <DoneIcon />
+                                <DoneIcon/>
                             </DoneButton>
                         )}
                         <DeleteButton onClick={() => onDelete(todo._id)}>
-                            <DeleteIcon />
+                            <DeleteIcon/>
                         </DeleteButton>
                     </ButtonContainer>
                 )}
