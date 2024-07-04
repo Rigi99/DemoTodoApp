@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Todo} from '../types/todo';
-import { fetchTodos, addTodo, deleteTodo, updateTodo } from '../services/todo.service';
-import { Container, Column, List, Separator, AddButton } from './TodoList.style';
+import {fetchTodos, addTodo, deleteTodo, updateTodo} from '../services/todo.service';
+import {Container, Column, List, Separator, AddButton} from './TodoList.style';
 import TodoCard from './TodoCard';
 import AddIcon from '@mui/icons-material/Add';
 
@@ -9,21 +9,20 @@ interface TodoListProps {
     userId: string;
 }
 
-const TodoList: React.FC<TodoListProps> = ({ userId }) => {
+const TodoList: React.FC<TodoListProps> = ({userId}) => {
     const [todos, setTodos] = useState<Todo[]>([]);
     const [newTodo, setNewTodo] = useState<Todo | undefined>();
     const [addingTodo, setAddingTodo] = useState(false);
     const [newTodoIsEditing, setNewTodoIsEditing] = useState(false);
 
+    const fetchData = useCallback(async () => {
+        const todosData = await fetchTodos(userId);
+        setTodos(todosData);
+    }, [userId]);
+
     useEffect(() => {
         fetchData().then(() => null);
-    });
-
-    const fetchData = async () => {
-        const todosData = await fetchTodos(userId);
-        console.log(todosData);
-        setTodos(todosData);
-    };
+    }, [fetchData]);
 
     const handleAddTodo = async () => {
         const addedTodo = await addTodo({
@@ -69,10 +68,10 @@ const TodoList: React.FC<TodoListProps> = ({ userId }) => {
         <>
             <Container>
                 <Column>
-                    <h2 style={{ display: 'flex', alignItems: 'center' }}>
+                    <h2 style={{display: 'flex', alignItems: 'center'}}>
                         Open
                         <AddButton onClick={handleAddTodo}>
-                            <AddIcon />
+                            <AddIcon/>
                         </AddButton>
                     </h2>
                     <List>
@@ -80,8 +79,10 @@ const TodoList: React.FC<TodoListProps> = ({ userId }) => {
                             <TodoCard
                                 key="new"
                                 todo={newTodo}
-                                onUpdateStatus={() => {}}
-                                onDelete={() => {}}
+                                onUpdateStatus={() => {
+                                }}
+                                onDelete={() => {
+                                }}
                                 onEdit={handleUpdateTodo}
                                 initialEditing={true}
                             />
@@ -97,7 +98,7 @@ const TodoList: React.FC<TodoListProps> = ({ userId }) => {
                         ))}
                     </List>
                 </Column>
-                <Separator />
+                <Separator/>
                 <Column>
                     <h2>In Progress</h2>
                     <List>
@@ -112,7 +113,7 @@ const TodoList: React.FC<TodoListProps> = ({ userId }) => {
                         ))}
                     </List>
                 </Column>
-                <Separator />
+                <Separator/>
                 <Column>
                     <h2>Done</h2>
                     <List>
